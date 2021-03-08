@@ -7,7 +7,7 @@ authors:
 dependencies:
     "cisco.asa": ">=1.0.0"
 license:
-    - "BBSD"
+    - "0BSD"
 tags:
     - cisco
     - asa
