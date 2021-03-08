@@ -1,0 +1,3 @@
+---
+# defaults file for cisco_asa_backup_config
+cabc_backup_destination: backup/

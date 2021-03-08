@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Farid Joubbi
+  description: Creates backups of Cisco ASA configurations, both with and without security contexts.
+  company: Conoa AB
+
+  license: 0BSD
+
+  min_ansible_version: 2.9
+
+  platforms:
+  - name: asa
+    versions:
+    - all
+
+  galaxy_tags:
+    - cisco
+    - asa
+    - backup
+
+dependencies: []

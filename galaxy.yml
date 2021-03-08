@@ -1,0 +1,15 @@
+namespace: "conoa"
+name: "cisco_backup"
+version: "1.0"
+readme: "README.md"
+authors:
+    - "Farid Joubbi"
+dependencies:
+    "cisco.asa": ">=1.0.0"
+license:
+    - "BBSD"
+tags:
+    - cisco
+    - asa
+    - backup
+repository: "https://github.com/conoa/ansible-collection-cisco_backup"

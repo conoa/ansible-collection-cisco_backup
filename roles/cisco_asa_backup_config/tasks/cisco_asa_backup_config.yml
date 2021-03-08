@@ -1,0 +1,56 @@
+---
+
+- name: Determine Security Context mode
+  block:
+    - name: Get context mode
+      asa_command:
+        commands:
+          - "show mode"
+      register: var_context
+
+    - name: set asa_multi_context fact
+      set_fact:
+        asa_multi_context: no
+
+    - name: set asa_multi_context fact on multiple context ASA
+      set_fact:
+        asa_multi_context: yes
+      when: '"multiple" in var_context.stdout[0]'
+
+
+- name: Contexts present
+  block:
+    - name: Discover contexts
+      asa_command:
+        commands:
+          - changeto system
+          - show run context | inc context
+      register: var_contexts_names
+
+    - name: Take backup of multiple mode ASA system context
+      asa_config:
+        context: "system"
+        backup: yes
+        backup_options:
+          dir_path: "{{ cabc_backup_destination }}"
+          filename: "{{ inventory_hostname }}-system.cfg"
+
+    - name: Take backup of multiple mode ASA contexts
+      asa_config:
+        context: "{{ item.split(' ')[1] }}"
+        backup: yes
+        backup_options:
+          dir_path: "{{ cabc_backup_destination }}"
+          filename: "{{ inventory_hostname }}-{{ item.split(' ')[1] }}.cfg"
+      loop:
+        "{{ var_contexts_names.stdout_lines[1] }}"
+  when: asa_multi_context
+
+
+- name: Take backup of single mode ASA
+  asa_config:
+    backup: yes
+    backup_options:
+      dir_path: "{{ cabc_backup_destination }}"
+      filename: "{{ inventory_hostname }}.cfg"
+  when: not asa_multi_context
