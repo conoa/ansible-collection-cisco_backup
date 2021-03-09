@@ -4,6 +4,8 @@ cisco_asa_backup_config
 A role that creates backups of Cisco ASA configurations.
 The role works with ASAs both with and without security contexts.
 
+The filename of the backup is *hostname-context.cfg*. The hostname is taken from the Ansible inventory, while the name of the context is taken from running-config.
+
 Requirements
 ------------
 
@@ -20,10 +22,12 @@ Example Playbook
 ----------------
 
 ```
+---
 - hosts: all
   gather_facts: no
-  roles:
-    - cisco_asa_backup_config
+  tasks:
+    - import_role:
+        name: conoa.cisco_backup.cisco_asa_backup_config
 
   vars:
     cabc_backup_destination: /tmp/asa_backups/
