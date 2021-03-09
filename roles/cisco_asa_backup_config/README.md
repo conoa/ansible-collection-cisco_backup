@@ -10,6 +10,7 @@ Requirements
 ------------
 
 This role requires the [asa command module](https://docs.ansible.com/ansible/latest/collections/cisco/asa/asa_command_module.html), which can be installed by `ansible-galaxy collection install cisco.asa`.
+The asa_command_module is installed automatically if you installed this role by installing the cisco_backup collection by issuing `ansible-galaxy collection install conoa.cisco_backup`.
 
 Role Variables
 --------------
