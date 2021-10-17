@@ -24,7 +24,11 @@
         commands:
           - changeto system
           - show run context | inc context
-      register: var_contexts_names
+      register: _contexts_names
+
+    - name: Clean list of contexts
+      set_fact:
+        var_contexts_names: "{{ _contexts_names.stdout_lines[1] | reject('search', 'admin-context') | list }}"
 
     - name: Take backup of multiple mode ASA system context
       asa_config:
@@ -42,7 +46,7 @@
           dir_path: "{{ cabc_backup_destination }}"
           filename: "{{ inventory_hostname }}-{{ item.split(' ')[1] }}.cfg"
       loop:
-        "{{ var_contexts_names.stdout_lines[1] }}"
+        "{{ var_contexts_names }}"
   when: asa_multi_context
 
 
