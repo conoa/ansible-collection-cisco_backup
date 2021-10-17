@@ -1,25 +1,24 @@
 ---
 
-- name: Determine Security Context mode
-  block:
-    - name: Get context mode
-      asa_command:
-        commands:
-          - "show mode"
-      register: var_context
+- name: Get context mode
+  asa_command:
+    commands:
+      - "show mode"
+  register: var_context
 
-    - name: set asa_multi_context fact
-      set_fact:
-        asa_multi_context: no
+- name: set asa_multi_context fact
+  set_fact:
+    asa_multi_context: no
 
-    - name: set asa_multi_context fact on multiple context ASA
-      set_fact:
-        asa_multi_context: yes
-      when: '"multiple" in var_context.stdout[0]'
+- name: set asa_multi_context fact on multiple context ASA
+  set_fact:
+    asa_multi_context: yes
+  when: '"multiple" in var_context.stdout[0]'
 
 
 - name: Contexts present
   block:
+
     - name: Discover contexts
       asa_command:
         commands:
