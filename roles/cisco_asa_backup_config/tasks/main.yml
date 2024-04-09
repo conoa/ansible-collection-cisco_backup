@@ -2,8 +2,6 @@
 # tasks file for cisco_asa_backup_config
 
 - name: Backup Cisco ASA
-  include: cisco_asa_backup_config.yml
-  become: yes
-  become_method: ansible.netcommon.enable
+  ansible.builtin.import_tasks: cisco_asa_backup_config.yml
   when: ansible_network_os == 'cisco.asa.asa' or
         ansible_network_os == 'asa'

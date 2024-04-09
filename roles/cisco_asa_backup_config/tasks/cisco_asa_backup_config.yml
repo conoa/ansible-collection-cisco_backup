@@ -1,58 +1,58 @@
 ---
 
 - name: Get context mode
-  asa_command:
+  cisco.asa.asa_command:
     commands:
       - "show mode"
   register: var_context
 
-- name: set asa_multi_context fact
-  set_fact:
-    asa_multi_context: no
+- name: Set asa_multi_context fact
+  ansible.builtin.set_fact:
+    asa_multi_context: false
 
-- name: set asa_multi_context fact on multiple context ASA
-  set_fact:
-    asa_multi_context: yes
+- name: Set asa_multi_context fact on multiple context ASA
+  ansible.builtin.set_fact:
+    asa_multi_context: true
   when: '"multiple" in var_context.stdout[0]'
 
 
 - name: Contexts present
+  when: asa_multi_context
   block:
 
     - name: Discover contexts
-      asa_command:
+      cisco.asa.asa_command:
         commands:
           - changeto system
           - show run context | inc context
       register: _contexts_names
 
     - name: Clean list of contexts
-      set_fact:
+      ansible.builtin.set_fact:
         var_contexts_names: "{{ _contexts_names.stdout_lines[1] | reject('search', 'admin-context') | list }}"
 
     - name: Take backup of multiple mode ASA system context
-      asa_config:
+      cisco.asa.asa_config:
         context: "system"
-        backup: yes
+        backup: true
         backup_options:
           dir_path: "{{ cabc_backup_destination }}"
           filename: "{{ inventory_hostname }}-system.cfg"
 
     - name: Take backup of multiple mode ASA contexts
-      asa_config:
+      cisco.asa.asa_config:
         context: "{{ item.split(' ')[1] }}"
-        backup: yes
+        backup: true
         backup_options:
           dir_path: "{{ cabc_backup_destination }}"
           filename: "{{ inventory_hostname }}-{{ item.split(' ')[1] }}.cfg"
       loop:
         "{{ var_contexts_names }}"
-  when: asa_multi_context
 
 
 - name: Take backup of single mode ASA
-  asa_config:
-    backup: yes
+  cisco.asa.asa_config:
+    backup: true
     backup_options:
       dir_path: "{{ cabc_backup_destination }}"
       filename: "{{ inventory_hostname }}.cfg"
